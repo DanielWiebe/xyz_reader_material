@@ -16,7 +16,9 @@ import android.support.v7.graphics.Palette;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,9 @@ public class ArticleDetailFragment extends Fragment implements
      private int mScrollY;
      private boolean mIsCard = false;
      private int mStatusBarFullOpacityBottom;
+
+     pl.droidsonroids.gif.GifImageView gifImageView;
+
 
      private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
      // Use default locale format
@@ -126,9 +131,11 @@ public class ArticleDetailFragment extends Fragment implements
      @Override
      public View onCreateView(LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
+          Slide slide = new Slide(Gravity.BOTTOM);
+          slide.addTarget(R.id.scrollview);
+
           mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-          mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                  mRootView.findViewById(R.id.draw_insets_frame_layout);
+          mDrawInsetsFrameLayout = mRootView.findViewById(R.id.draw_insets_frame_layout);
           mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
                @Override
                public void onInsetsChanged(Rect insets) {
@@ -136,7 +143,10 @@ public class ArticleDetailFragment extends Fragment implements
                }
           });
 
-          mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
+          gifImageView = mRootView.findViewById(R.id.loading_view);
+          gifImageView.setVisibility(View.VISIBLE);
+
+          mScrollView = mRootView.findViewById(R.id.scrollview);
           mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
                @Override
                public void onScrollChanged() {
@@ -147,7 +157,7 @@ public class ArticleDetailFragment extends Fragment implements
                }
           });
 
-          mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
+          mPhotoView = mRootView.findViewById(R.id.photo);
           mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
           mStatusBarColorDrawable = new ColorDrawable(0);
@@ -198,15 +208,16 @@ public class ArticleDetailFragment extends Fragment implements
                return;
           }
 
-          TextView titleView = (TextView) mRootView.findViewById(R.id.article_title);
-          TextView bylineView = (TextView) mRootView.findViewById(R.id.article_byline);
+          TextView titleView = mRootView.findViewById(R.id.article_title);
+          TextView bylineView = mRootView.findViewById(R.id.article_byline);
           bylineView.setMovementMethod(new LinkMovementMethod());
-          TextView bodyView = (TextView) mRootView.findViewById(R.id.article_body);
+          TextView bodyView = mRootView.findViewById(R.id.article_body);
 
 
           bodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
           if (mCursor != null) {
+
                mRootView.setAlpha(0);
                mRootView.setVisibility(View.VISIBLE);
                mRootView.animate().alpha(1);
@@ -230,7 +241,9 @@ public class ArticleDetailFragment extends Fragment implements
                                     + "</font>"));
 
                }
-               bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
+               bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
+                       .substring(0, 3000)
+                       .replaceAll("(\r\n|\n)", "<br />")));
                ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                        .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
                             @Override
@@ -252,6 +265,7 @@ public class ArticleDetailFragment extends Fragment implements
                             }
                        });
           } else {
+
                mRootView.setVisibility(View.GONE);
                titleView.setText("N/A");
                bylineView.setText("N/A");
@@ -266,9 +280,11 @@ public class ArticleDetailFragment extends Fragment implements
 
      @Override
      public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+          gifImageView.setVisibility(View.GONE);
           if (!isAdded()) {
                if (cursor != null) {
                     cursor.close();
+
                }
                return;
           }

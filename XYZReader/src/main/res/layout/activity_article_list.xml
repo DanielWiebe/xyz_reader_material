@@ -2,11 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
+        android:background="@color/primary_text"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
@@ -18,14 +20,15 @@
             android:paddingTop="116dp"
             android:paddingLeft="@dimen/list_side_margin"
             android:paddingRight="@dimen/list_side_margin"
+            tools:listitem="@layout/list_item_article"
             android:paddingBottom="28dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
-        android:layout_height="112dp"
-        android:background="?colorPrimary"
+        android:layout_height="110dp"
+        android:background="@color/primary"
         android:elevation="8dp">
 
         <android.support.v7.widget.Toolbar

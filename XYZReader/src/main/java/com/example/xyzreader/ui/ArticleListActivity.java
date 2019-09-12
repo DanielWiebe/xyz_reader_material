@@ -67,14 +67,14 @@ public class ArticleListActivity extends AppCompatActivity implements
           super.onCreate(savedInstanceState);
           setContentView(R.layout.activity_article_list);
 
-          mToolbar = (Toolbar) findViewById(R.id.toolbar);
+          mToolbar = findViewById(R.id.toolbar);
 
 
           final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
-          mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+          mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
-          mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+          mRecyclerView = findViewById(R.id.recycler_view);
           getLoaderManager().initLoader(0, null, this);
 
           if (savedInstanceState == null) {
@@ -117,6 +117,7 @@ public class ArticleListActivity extends AppCompatActivity implements
           StaggeredGridLayoutManager sglm =
                   new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
           mRecyclerView.setLayoutManager(sglm);
+
      }
 
      @Override
@@ -131,13 +132,14 @@ public class ArticleListActivity extends AppCompatActivity implements
 
           public ViewHolder(View view) {
                super(view);
-               thumbnailView = (DynamicHeightNetworkImageView) view.findViewById(R.id.thumbnail);
-               titleView = (TextView) view.findViewById(R.id.article_title);
-               subtitleView = (TextView) view.findViewById(R.id.article_subtitle);
+               thumbnailView = view.findViewById(R.id.thumbnail);
+               titleView = view.findViewById(R.id.article_title);
+               subtitleView = view.findViewById(R.id.article_subtitle);
           }
      }
 
      private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+          int previousPos = 0;
           private Cursor mCursor;
 
           public Adapter(Cursor cursor) {
@@ -199,6 +201,13 @@ public class ArticleListActivity extends AppCompatActivity implements
                        mCursor.getString(ArticleLoader.Query.THUMB_URL),
                        ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
                holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+               if (position > previousPos) {
+                    AnimationUtils.translateYAnimate(holder, true);
+               } else {
+                    AnimationUtils.translateYAnimate(holder, false);
+               }
+               previousPos = position;
           }
 
           @Override

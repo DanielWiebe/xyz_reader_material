@@ -41,5 +41,7 @@ dependencies {
      implementation 'com.android.support:exifinterface:28.0.0'
      implementation 'com.squareup.okhttp3:okhttp:4.1.1'
      implementation 'com.squareup.picasso:picasso:2.71828'
+
+     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
      implementation files('libs/volley.jar')
 }
