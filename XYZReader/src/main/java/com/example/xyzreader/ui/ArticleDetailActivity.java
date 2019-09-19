@@ -20,24 +20,24 @@ import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 
+import timber.log.Timber;
+
 /**
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
+     pl.droidsonroids.gif.GifImageView gifImageView;
      private Cursor mCursor;
      private long mStartId;
-
      private long mSelectedItemId;
      private int mSelectedItemUpButtonFloor = Integer.MAX_VALUE;
      private int mTopInset;
-
      private ViewPager mPager;
      private MyPagerAdapter mPagerAdapter;
      private View mUpButtonContainer;
      private View mUpButton;
-
 
      @Override
      protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,11 @@ public class ArticleDetailActivity extends AppCompatActivity
                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
           }
+
+          Timber.plant(new Timber.DebugTree());
+
           setContentView(R.layout.activity_article_detail);
-
-
+          gifImageView = findViewById(R.id.loading_view);
 
 
           getLoaderManager().initLoader(0, null, this);
@@ -115,14 +117,17 @@ public class ArticleDetailActivity extends AppCompatActivity
 
      @Override
      public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+          Timber.d("OncreateLoader, setting to visible");
+          gifImageView.setVisibility(View.VISIBLE);
           return ArticleLoader.newAllArticlesInstance(this);
      }
 
      @Override
      public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
+          Timber.d("onloadfinished, setting to gone");
           mCursor = cursor;
           mPagerAdapter.notifyDataSetChanged();
-
+          gifImageView.setVisibility(View.GONE);
           // Select the start ID
           if (mStartId > 0) {
                mCursor.moveToFirst();

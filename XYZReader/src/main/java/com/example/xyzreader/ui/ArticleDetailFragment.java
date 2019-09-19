@@ -61,7 +61,7 @@ public class ArticleDetailFragment extends Fragment implements
      private boolean mIsCard = false;
      private int mStatusBarFullOpacityBottom;
 
-     pl.droidsonroids.gif.GifImageView gifImageView;
+
 
 
      private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
@@ -143,8 +143,8 @@ public class ArticleDetailFragment extends Fragment implements
                }
           });
 
-          gifImageView = mRootView.findViewById(R.id.loading_view);
-          gifImageView.setVisibility(View.VISIBLE);
+
+
 
           mScrollView = mRootView.findViewById(R.id.scrollview);
           mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
@@ -241,8 +241,33 @@ public class ArticleDetailFragment extends Fragment implements
                                     + "</font>"));
 
                }
+
+//
+//
+
+
+
+
+
+
+
+//               SubString method to adjust
+//
+
+
+
+
+
+
+
+
+
+
+
+//
+
                bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
-                       .substring(0, 3000)
+                       .substring(0, 20000)
                        .replaceAll("(\r\n|\n)", "<br />")));
                ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                        .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
@@ -275,17 +300,19 @@ public class ArticleDetailFragment extends Fragment implements
 
      @Override
      public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+
           return ArticleLoader.newInstanceForItemId(getActivity(), mItemId);
      }
 
      @Override
      public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-          gifImageView.setVisibility(View.GONE);
+
           if (!isAdded()) {
                if (cursor != null) {
                     cursor.close();
 
                }
+
                return;
           }
 

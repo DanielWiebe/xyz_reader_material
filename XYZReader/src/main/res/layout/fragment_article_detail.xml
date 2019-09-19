@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/draw_insets_frame_layout"
     android:layout_width="match_parent"
+    android:background="@color/accent"
     android:layout_height="match_parent">
 
 
@@ -19,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/photo_placeholder">
+
                 <!--suppress AndroidLintContentDescription -->
                 <ImageView
                     android:id="@+id/photo"
@@ -26,9 +28,11 @@
                     android:layout_height="304dp"
                     android:scaleType="centerCrop" />
 
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="112dp"
+
                     android:background="@drawable/photo_background_protection" />
 
             </FrameLayout>
@@ -56,17 +60,17 @@
                     android:paddingRight="@dimen/detail_inner_horiz_margin"
                     android:paddingBottom="@dimen/detail_metabar_vert_padding"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll|snap">
 
                     <TextView
                         android:id="@+id/article_title"
                         style="?android:attr/textAppearanceLarge"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="hello"
                         android:fontFamily="sans-serif-condensed"
                         android:lineSpacingMultiplier="0.9"
                         android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
+                        android:text="hello"
                         android:textColor="#fff"
                         android:textSize="@dimen/detail_title_text_size"
                         android:textStyle="bold" />
@@ -112,12 +116,6 @@
         android:stateListAnimator="@animator/fab_state_list_anim" />
 
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/loading_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:src="@drawable/shot" />
+
 
 </com.example.xyzreader.ui.DrawInsetsFrameLayout>
