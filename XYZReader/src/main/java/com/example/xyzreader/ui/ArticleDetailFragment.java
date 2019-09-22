@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
@@ -22,6 +23,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,6 +60,7 @@ public class ArticleDetailFragment extends Fragment implements
      private View mPhotoContainerView;
      private ImageView mPhotoView;
      private int mScrollY;
+     private int oldScrollYPosition = 0;
      private boolean mIsCard = false;
      private int mStatusBarFullOpacityBottom;
 
@@ -134,6 +137,10 @@ public class ArticleDetailFragment extends Fragment implements
 
           mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
           mDrawInsetsFrameLayout = mRootView.findViewById(R.id.draw_insets_frame_layout);
+          mScrollView = mRootView.findViewById(R.id.scrollview);
+
+          final FloatingActionButton floatingActionButton = mRootView.findViewById(R.id.share_fab);
+
           mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
                @Override
                public void onInsetsChanged(Rect insets) {
@@ -142,7 +149,6 @@ public class ArticleDetailFragment extends Fragment implements
           });
 
 
-          mScrollView = mRootView.findViewById(R.id.scrollview);
           mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
                @Override
                public void onScrollChanged() {
@@ -150,6 +156,22 @@ public class ArticleDetailFragment extends Fragment implements
                     getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
                     mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
                     updateStatusBar();
+//                    if (mScrollView.getChildAt(0).getBottom() <= (mScrollView.getHeight() + mScrollView.getScrollY())) {
+//                         floatingActionButton.show();
+//                    } else if(mScrollView.getChildAt(0).getTop() <= (mScrollView.getHeight() + mScrollView.getScrollY())) {
+//                         floatingActionButton.hide();
+//                    }
+               }
+          });
+          mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+               @Override
+               public void onScrollChanged() {
+                    if (mScrollView.getScrollY() > oldScrollYPosition) {
+                         floatingActionButton.hide();
+                    } else if (mScrollView.getScrollY() < oldScrollYPosition || mScrollView.getScrollY() <= 0) {
+                         floatingActionButton.show();
+                    }
+                    oldScrollYPosition = mScrollView.getScrollY();
                }
           });
 
@@ -159,7 +181,7 @@ public class ArticleDetailFragment extends Fragment implements
 
           mStatusBarColorDrawable = new ColorDrawable(0);
 
-          mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+          floatingActionButton.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
                     startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
