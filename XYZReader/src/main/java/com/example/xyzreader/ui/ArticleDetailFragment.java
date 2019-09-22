@@ -62,8 +62,6 @@ public class ArticleDetailFragment extends Fragment implements
      private int mStatusBarFullOpacityBottom;
 
 
-
-
      private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
      // Use default locale format
      private SimpleDateFormat outputFormat = new SimpleDateFormat();
@@ -144,8 +142,6 @@ public class ArticleDetailFragment extends Fragment implements
           });
 
 
-
-
           mScrollView = mRootView.findViewById(R.id.scrollview);
           mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
                @Override
@@ -157,6 +153,7 @@ public class ArticleDetailFragment extends Fragment implements
                }
           });
 
+
           mPhotoView = mRootView.findViewById(R.id.photo);
           mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
@@ -167,10 +164,11 @@ public class ArticleDetailFragment extends Fragment implements
                public void onClick(View view) {
                     startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
                             .setType("text/plain")
-                            .setText("Some sample text")
+                            .setText("XYZ Reader Share")
                             .getIntent(), getString(R.string.action_share)));
                }
           });
+
 
           bindViews();
           updateStatusBar();
@@ -242,32 +240,8 @@ public class ArticleDetailFragment extends Fragment implements
 
                }
 
-//
-//
-
-
-
-
-
-
-
-//               SubString method to adjust
-//
-
-
-
-
-
-
-
-
-
-
-
-//
-
                bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)
-                       .substring(0, 20000)
+                       .substring(0, 10000)
                        .replaceAll("(\r\n|\n)", "<br />")));
                ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
                        .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {

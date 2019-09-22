@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -41,10 +42,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
      private static final String TAG = ArticleListActivity.class.toString();
+     boolean isLand;
+
+
      private Toolbar mToolbar;
      private SwipeRefreshLayout mSwipeRefreshLayout;
      private RecyclerView mRecyclerView;
-
      private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss");
      // Use default locale format
      @SuppressLint("SimpleDateFormat")
@@ -66,7 +69,7 @@ public class ArticleListActivity extends AppCompatActivity implements
      protected void onCreate(Bundle savedInstanceState) {
           super.onCreate(savedInstanceState);
           setContentView(R.layout.activity_article_list);
-
+          isLand = getResources().getBoolean(R.bool.isLand);
           mToolbar = findViewById(R.id.toolbar);
 
 
@@ -113,12 +116,18 @@ public class ArticleListActivity extends AppCompatActivity implements
           Adapter adapter = new Adapter(cursor);
           adapter.setHasStableIds(true);
           mRecyclerView.setAdapter(adapter);
-          int columnCount = getResources().getInteger(R.integer.list_column_count);
-          StaggeredGridLayoutManager sglm =
-                  new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-          mRecyclerView.setLayoutManager(sglm);
 
+          if (isLand) {
+               int columnCount = getResources().getInteger(R.integer.list_column_count);
+               StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager((columnCount), StaggeredGridLayoutManager.VERTICAL);
+               mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+          } else {
+               LinearLayoutManager linearLayoutManager =
+                       new LinearLayoutManager(this);
+               mRecyclerView.setLayoutManager(linearLayoutManager);
+          }
      }
+
 
      @Override
      public void onLoaderReset(Loader<Cursor> loader) {

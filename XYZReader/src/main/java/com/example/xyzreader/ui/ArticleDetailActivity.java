@@ -28,7 +28,6 @@ import timber.log.Timber;
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-     pl.droidsonroids.gif.GifImageView gifImageView;
      private Cursor mCursor;
      private long mStartId;
      private long mSelectedItemId;
@@ -51,7 +50,6 @@ public class ArticleDetailActivity extends AppCompatActivity
           Timber.plant(new Timber.DebugTree());
 
           setContentView(R.layout.activity_article_detail);
-          gifImageView = findViewById(R.id.loading_view);
 
 
           getLoaderManager().initLoader(0, null, this);
@@ -118,7 +116,6 @@ public class ArticleDetailActivity extends AppCompatActivity
      @Override
      public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
           Timber.d("OncreateLoader, setting to visible");
-          gifImageView.setVisibility(View.VISIBLE);
           return ArticleLoader.newAllArticlesInstance(this);
      }
 
@@ -127,7 +124,6 @@ public class ArticleDetailActivity extends AppCompatActivity
           Timber.d("onloadfinished, setting to gone");
           mCursor = cursor;
           mPagerAdapter.notifyDataSetChanged();
-          gifImageView.setVisibility(View.GONE);
           // Select the start ID
           if (mStartId > 0) {
                mCursor.moveToFirst();
